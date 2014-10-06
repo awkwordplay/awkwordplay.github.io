@@ -1,0 +1,41 @@
+# Title of your blog; shows in the header
+name: "awkwordlay"
+
+# Description of your content (will only be used on Google Search)
+description: "A strangely touching tale of technology"
+
+# Your name. Will show in your footer + sidebar 
+author: "Janos Dobronszki"
+
+url: "http://awkwordplay.com"
+baseurl: "/"
+
+# A short presentation of yourself. Will show in the sidebar, under your name. Best usage would be between 30 to 50 words. 
+author-bio: "I do things."
+
+# Social Accounts (mine, as placeholders)
+
+# twitter: mx3m
+github: johnny-john
+# dribbble: m3xm
+# instagram: m3xm
+
+# Google Analytics (you may want to changes these with yours or even delete :)
+
+# ga_domain: m3xm.github.io
+# ga_tracking_id: UA-47727049-1
+
+# Other (refer to http://jekyllrb.com/docs/home/ for further details on the below)
+
+markdown: kramdown
+permalink: pretty
+highlighter: pygments
+
+paginate: 20
+paginate_path: "/page/:num"
+
+# SCSS
+
+sass:
+  sass_dir: _scss
+  style: :compressed
