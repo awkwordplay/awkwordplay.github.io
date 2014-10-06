@@ -1,5 +1,5 @@
 # Title of your blog; shows in the header
-name: "awkwordlay"
+name: "awkwordplay"
 
 # Description of your content (will only be used on Google Search)
 description: "A strangely touching tale of technology"
@@ -8,7 +8,7 @@ description: "A strangely touching tale of technology"
 author: "Janos Dobronszki"
 
 url: "http://awkwordplay.com"
-baseurl: "/"
+baseurl: ""
 
 # A short presentation of yourself. Will show in the sidebar, under your name. Best usage would be between 30 to 50 words. 
 author-bio: "I do things."
