@@ -4,169 +4,71 @@ title:  "Haskell tutorial - Installation"
 date:   2013-04-04
 categories: programming
 tags: functional-programming, haskell, tutorial haskell-tutorial, ghc, ghci
-image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
 ---
 
 <p>
-    There are more than a couple of meatless posts on the net about how the magical (not at all) functional programming paradigm is entirely different (no it isn't)
-    from everything you are used to, and how will it save the world (no it won't).
+    This is the first post in my Haskell tutorial series. As I am currently teaching one of my friends Haskell, I thought documenting
+    the process could benefit some. Often a different wording can shed light on an issue, so here is my take. The person in question knows
+    a bit of <a href="http://golang.org/">Go</a>, but he is mostly a beginner to programming.
+</p>
+
+<p>    
+    I will try to assume as little programming knowledge as possible but if you have never coded a line in your life you should consider
+    consulting an other source, or picking an easier language to start with, depending on your goal. If you want to learn programming to
+    create applications as soon as possible, I think Haskell may not be the best option because it requires a will of steel to get to a level
+    where you can fluently express your thoughts and where you can read and use 3rd party libraries with ease. If your primary goal is
+    to learn a beautifully designed language which implements a wide range of cutting edge features, but still very effective in the
+    practical world with enough determination, then Haskell is unsurpassed at the time of writing this.
 </p>
 
 <p>
-    So let's try to approach Haskell, which is the <a href="http://stackoverflow.com/a/809983/441291">800-pound gorilla</a> in FP (functional programming) land, from a practical
-    angle, without empty buzzwords. If you think that this article also lacks meat, well, you are wrong because I am right, but nevertheless slap me in the face.
+    Having experience with a language with closure support, and/or with a language having a static type system would be a plus. 
+    I will try to provide parallel code examples in JavaScript too where it makes sense for those coming from imperative languages.
+    JavaScript was chosen because it is the most popular language to date, and everyone has access to JS interpreters - just fire up a browser.
 </p>
 
+<h3>Get the Haskell Platform</h3>
+
 <p>
-    I will intentionally remain in shallow waters to be easily digestible by the broadest possible audience.
+    The easiest way to install Haskell is to download the <a href="http://www.haskell.org/platform/">Haskell platform</a>.
+    It is a batteries included package, and it only takes a click to install. I use it on Windows which is generally a not too well supported
+    platform by non-mainstream languages but the Haskell platform works flawlessly for me, and I don't hear complains about it in the Haskell IRC
+    channel (#haskell on Freenode) either. That IRC channel by the way may is full of helpful people, so feel free to ask for help there,
+    we are very welcoming to beginners. If you don't know how to use an IRC client, <a href="http://webchat.freenode.net/">here is an online one</a>.
+    Don't forget the hash from the #haskell channel name when you try to log in.
 </p>
 
-<h3>Static type system with type inference</h3>
+<h3>Install packages with cabal</h3>
 
 <p>
-    Most programmers thinkink about static typing imagine something like this:
-</p>
-
-<pre>
-    Foo* foo = new(Foo);
-</pre>
-
-<p>
-    Usually when coders argue about wether static or dynamic typing is teh sh*t, they contrast the dynamically typed languages with C++/Java school of static typing (see above).
-    Sacrificing some sophistication the usual conclusion can be reduced to "static typing can catch more bugs but you have to type more" (let's not go into unit testing now).
-    If that's what you tought too, let me introduce you the <a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner">Hindley-Milner type inference</a>. Basically with the help of it,
-    the compiler can type check your code without requiring you to annotate your types in even one place (I lied, in rare cases, it may be required).
-</p>
-
-<p>
-    And no, Google's new language, Go does not have type inference, at least nothing comparable to what you can find in Haskell.
-    What the Go evangelists try to sell as type inference is a very little subset of (full) type inference. The Go way:
-</p>
-
-<pre>
-func nonsense(a int, b string) int {    // <- You have to annotate type or compilation fails.
-    c := 42 // <- "Initialization and declaration" which is being sold as type inference
-    return a + c
-}
-</pre>
-
-<p>
-    The Haskell way:
+    After you installed the platform you can also install individual modules written by different Haskell programmers. There is a central repository
+    where most packages can be found (those which are uploaded by their authors), it is called <a href="http://hackage.haskell.org/packages/hackage.html">
+    Hackage</a>. If you find a package you would like to use you can issue the next command in the command line:
 </p>
 
 <pre>
-nonsense a b = let c = 42 in a + c
+cabal install pkg-name
 </pre>
 
 <p>
-    That Haskell snippet will compile. What will be the type of it? You can query it by typing ":t nonsense" in GHCi
+    Where pkg-name obviously changes depending on your needs. Cabal is the name of the tool which handles the module installation magic.
+    This command will only work when the given module is in HackageDB already. If you downloaded a module yourself, to install, you must step into the
+    directory where this module resides. You can recognise an installable module easily, search for files like:
 </p>
 
 <pre>
-> :t nonsense
-nonsense :: Num a => a -> t -> a
+pkg-name.cabal
+Setup.hs
 </pre>
 
 <p>
-    That type signature basically means: nonsense is a function, with two arguments, first is a, which can be any type, as long as that given type can be used as
-    a number (is an instance of type class Num. Don't confuse type classes with Javaish classes, they are more like interfaces). The second argument can be any type, without
-    restriction. Why? Because we did not use it! The return value has the same type as the first argument. This part can be quite tricky to nonhaskellers, because return type
-    polymorphism is very rare in mainstream languages.
+    When you are in the proper director, just issue <b>cabal install</b> without any modulename.
 </p>
 
-<p>
-    As you can see, what we have here is the best of both worlds: compile time type checking without the requirement of annotating types by hand. Of course, type annotation is
-    useful for humans, but the Haskell compiler doesn't really care about it, he is clever enough to figure this out. In fact, a lot of times I (and I suspect others too, but I can't
-    speak for them) I write the function without type annotations, ask GHCi for the type signature and paste that into the source file to help others and my 2 months older version of
-    me understanding the code.
-</p>
-
-<h3>Generics without breaking a sweat</h3>
+<h4>Finding modules</h4>
 
 <p>
-    As mindful readers may have already noticed in the above Haskell snippet, in Haskell you write generic code by default. You don't have to learn a template language
-    (there is a thing called Template Haskell but that is another story), you don't have to buy a 24 inch monitor to write generic function signatures. That is the default and
-    it comes for free.
-</p>
-
-<h3>Syntax without clutter</h3>
-
-<p>
-    One thing I noticed while learning Haskell, that the authors have a great sense of beauty. This can be generally said about the language as a whole, but it can be most easily
-    seen when looking at the syntax. Here are a couple of constructs side by side with the Go version, as that is a language I used directly before Haskell thus I hopefully
-    make no errors.
-</p>
-
-<pre>
-// Switch case
-
-// Go
-a := 20
-switch a {
-    case 10:
-            return "It's ten!"
-    case 20:
-            return "It's not ten :("
-}
-
-// Haskell
-let a = 20
-in case a of
-    10  -> "It's ten!"
-    20  -> "It's not ten :("
-
-// Anonymous function
-
-func (a, b int) int {
-    a + b
-}
-
-\a b -> a + b
-
-// Looping: transform a list/array
-
-// Go
-a := []int{1,2,3,4,5,6,7,8,9,10}
-f := func(a int) int {
-    return a+1
-}
-b := []int{}
-for _, v := range a {
-    b = append(b, v)
-}
-return v
-
-// Haskell
-let a = [1..10]
-    f = (+1)
-map f a
-</pre>
-
-<p>
-    The differences really add up. There are some outrageous claims on the net about how much you can save with functional programming in terms of line count, but I think
-    a good estimate is that you can at least halve the LOCs.
-</p>
-
-<h3>REPL</h3>
-
-<p>
-    Haskell is amongst the few statically typed languages what you can use interactively. GHCi is the Haskell compiler, and despite being a not too mainstream language, it is
-    the Haskell platform is a breeze to use, even on Windows, its a one click install, and you can double click on any hs files and GHCi starts. GHCi is an incredible productivity
-    boost. Just to name a few cool features: :t gives back the type of any expression, :i will display information about the given type, you can set GHCi to clock all expressions
-    (display the milliseconds spent calculating the expression). The possibilities are endless, really.
-</p>
-
-<h3>Type signatures are telling</h3>
-
-<p>
-    The information dense type signature of Haskell functions allow us to effectively search for a function by approximate type with the help of a tool like
-    <a href="http://www.haskell.org/hoogle/">Hoogle</a>.
-</p>
-
-<h3>Conclusion</h3>
-
-<p>
-    The general consensus on Haskell is that it's impractical. I think that opinion mainly stems from old experiences. I agree that it's still rough around some edges:
-    I am particularly worried about the lack of stack traces. The thought of running it on production servers and not seeing the source of an exception frankly scares the
-    sh*t out of me. But as a language it is very well designed, especially compared to the current mainstream languages.
+    There is no use in package manager tools if you don't know what do you want to install.
+    There is a very useful for Haskell programmers <a href="http://www.haskell.org/hoogle/">Hoogle</a>, it lets you search for Haskell
+    functions by name or signature. Type signatures in Haskell are very telling, I will explain later why.
 </p>

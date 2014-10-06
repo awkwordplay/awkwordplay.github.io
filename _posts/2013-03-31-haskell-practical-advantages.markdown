@@ -3,8 +3,7 @@ layout: post
 title:  "Haskell - Practical Advantages"
 date:   2013-03-31
 categories: programming
-tags: functional-programming, haskell
-image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
+tags: functional-programming, haskell, tutorial haskell-tutorial
 ---
 
 <p>
@@ -27,9 +26,9 @@ image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
     Most programmers thinkink about static typing imagine something like this:
 </p>
 
-<pre>
+{% highlight java %}
     Foo* foo = new(Foo);
-</pre>
+{% endhighlight %}
 
 <p>
     Usually when coders argue about wether static or dynamic typing is teh sh*t, they contrast the dynamically typed languages with C++/Java school of static typing (see above).
@@ -43,29 +42,29 @@ image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
     What the Go evangelists try to sell as type inference is a very little subset of (full) type inference. The Go way:
 </p>
 
-<pre>
+{% highlight go %}
 func nonsense(a int, b string) int {    // <- You have to annotate type or compilation fails.
     c := 42 // <- "Initialization and declaration" which is being sold as type inference
     return a + c
 }
-</pre>
+{% endhighlight %}
 
 <p>
     The Haskell way:
 </p>
 
-<pre>
+{% highlight haskell %}
 nonsense a b = let c = 42 in a + c
-</pre>
+{% endhighlight %}
 
 <p>
     That Haskell snippet will compile. What will be the type of it? You can query it by typing ":t nonsense" in GHCi
 </p>
 
-<pre>
+{% highlight haskell %}
 > :t nonsense
 nonsense :: Num a => a -> t -> a
-</pre>
+{% endhighlight %}
 
 <p>
     That type signature basically means: nonsense is a function, with two arguments, first is a, which can be any type, as long as that given type can be used as
@@ -97,7 +96,7 @@ nonsense :: Num a => a -> t -> a
     make no errors.
 </p>
 
-<pre>
+{% highlight go %}
 // Switch case
 
 // Go
@@ -108,21 +107,29 @@ switch a {
     case 20:
             return "It's not ten :("
 }
+{% endhighlight %}
 
+{% highlight haskell %}
 // Haskell
 let a = 20
 in case a of
     10  -> "It's ten!"
     20  -> "It's not ten :("
+{% endhighlight %}
 
+{% highlight go %}
 // Anonymous function
 
 func (a, b int) int {
     a + b
 }
+{% endhighlight %}
 
+{% highlight haskell %}
 \a b -> a + b
+{% endhighlight %}
 
+{% highlight go %}
 // Looping: transform a list/array
 
 // Go
@@ -135,12 +142,14 @@ for _, v := range a {
     b = append(b, v)
 }
 return v
+{% endhighlight %}
 
+{% highlight haskell %}
 // Haskell
 let a = [1..10]
     f = (+1)
 map f a
-</pre>
+{% endhighlight %}
 
 <p>
     The differences really add up. There are some outrageous claims on the net about how much you can save with functional programming in terms of line count, but I think

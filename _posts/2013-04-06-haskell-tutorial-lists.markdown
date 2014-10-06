@@ -4,7 +4,6 @@ title:  "Haskell tutorial - Lists"
 date:   2013-04-06
 categories: programming
 tags: functional-programming, haskell, tutorial haskell-tutorial
-image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
 ---
 
 <p>
@@ -37,7 +36,7 @@ Bool        True        Boolean type, can take two values: True or False.
     GHCi is still your friend, there is a command, :k, which will return you the kind of a type.
 </p>
 
-<pre>
+{% highlight haskell %}
 > :k Int
 Int :: *
 
@@ -50,7 +49,7 @@ Int :: *
 > import Data.Map
 > :k Map
 Map :: * -> * -> *
-</pre>
+{% endhighlight %}
 
 <p>
     Wohoo! We are advancing so fast. The <b>-></b> symbol means the same as in function type signatures: it separates the inputs and the
@@ -66,25 +65,25 @@ Map :: * -> * -> *
     To create a list, we have to list values belonging to the same type, separated by commas, inside square brackets:
 </p>
 
-<pre>
+{% highlight haskell %}
 > let x = [1, 2, 3, 4, 5]
 > :t x
 x :: [Integer]
 > let y = [True, False, False]
 > :t y
 y :: [Bool]
-</pre>
+{% endhighlight %}
 
 <p>
     We can do enumeration very easily too (if the given type is an instance of the Enum type class):
 </p>
 
-<pre>
+{% highlight haskell %}
 > [0..20]
 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 > ['a'..'z']
 "abcdefghijklmnopqrstuvwxyz"
-</pre>
+{% endhighlight %}
 
 <h3>Lazy evaluation</h3>
 
@@ -93,12 +92,12 @@ y :: [Bool]
     We already now the head function.
 </p>
 
-<pre>
+{% highlight haskell %}
 > -- This is how you define an infinite list:
 > let x = [1..]
 > head x
 1
-</pre>
+{% endhighlight %}
 
 <p>
     In strict languages the infinite list would halt our program (at least this thread), but not in Haskell. When we assign x the infinite list, the list is not
@@ -120,12 +119,12 @@ y :: [Bool]
 
 <h4>length</h4>
 
-<pre>
+{% highlight haskell %}
 > :t length
 length :: [a] -> Int
 > length [0..10]
 11
-</pre>
+{% endhighlight %}
 
 <p>
     Length (amazingly) returns the length of the list.
@@ -138,24 +137,24 @@ length :: [a] -> Int
     linked list.
 </p>
 
-<pre>
+{% highlight haskell %}
 > :t (:)
 (:) :: a -> [a] -> [a]
 > 1:[1,2,3]
 [1,1,2,3]
-</pre>
+{% endhighlight %}
 
 <p>
     This operator is right associative, we can conveniently append mutiple elements:
 </p>
 
-<pre>
+{% highlight haskell %}
 > :i (:)
 data [] a = ... | a : [a]       -- Defined in `GHC.Types'
 infixr 5 :
 > 1:2:3:[]
 [1,2,3]
-</pre>
+{% endhighlight %}
 
 <h4>(++)</h4>
 
@@ -163,12 +162,12 @@ infixr 5 :
     The ++ operator concatenates to lists.
 </p>
 
-<pre>
+{% highlight haskell %}
 > :t (++)
 (++) :: [a] -> [a] -> [a]
 > [1,2,3] ++ [10,20,30]
 [1,2,3,10,20,30]
-</pre>
+{% endhighlight %}
 
 <h4>head, last, init, tail, (!!)</h4>
 
@@ -176,7 +175,7 @@ infixr 5 :
     These functions allow you to extract elements and sublists from lists easily.
 </p>
 
-<pre>
+{% highlight haskell %}
 > head [1..5]
 1
 > last [1..5]
@@ -187,7 +186,7 @@ infixr 5 :
 [2,3,4,5]
 > [1..5]!!2
 3
-</pre>
+{% endhighlight %}
 
 <p>
     Lists are zero indexed in Haskell, which means we refer to the first element as not the first, but rather as the 0th element.
@@ -195,10 +194,10 @@ infixr 5 :
 
 <h4>map</h4>
 
-<pre>
+{% highlight haskell %}
 > :t map
 map :: (a -> b) -> [a] -> [b]
-</pre>
+{% endhighlight %}
 
 <p>
     Map is a higher order function, which means that it either takes functions as its input or returns a function. The () in the signature means a function.
@@ -206,28 +205,28 @@ map :: (a -> b) -> [a] -> [b]
     can double a number, and a list of numbers. Issuing <b>map double list</b> will return a list with the doubled numbers:
 </p>
 
-<pre>
+{% highlight haskell %}
 > let double x = x * 2
 > let myList = [1..10]
 > myList
 [1,2,3,4,5,6,7,8,9,10]
 > map double myList
 [2,4,6,8,10,12,14,16,18,20]
-</pre>
+{% endhighlight %}
 
 <h4>filter</h4>
 
-<pre>
+{% highlight haskell %}
 > :t filter
 filter :: (a -> Bool) -> [a] -> [a]
-</pre>
+{% endhighlight %}
 
 <p>
     Filter takes a predicate (a function returning a boolean value) and a list, and returns a new list containing only the values which satisfies the predicate.
     An example would be to filter numbers based on whether they are even:
 </p>
 
-<pre>
+{% highlight haskell %}
 > :t rem
 rem :: Integral a => a -> a -> a
 -- Integral is a type class implemented by both Int and Integer types.
@@ -236,4 +235,4 @@ rem :: Integral a => a -> a -> a
 > let isEven x = rem x 2 == 0
 > filter isEven [0..20]
 [0,2,4,6,8,10,12,14,16,18,20]
-</pre>
+{% endhighlight %}

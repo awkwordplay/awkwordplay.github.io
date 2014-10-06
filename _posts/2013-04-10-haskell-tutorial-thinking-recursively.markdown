@@ -4,169 +4,154 @@ title:  "Haskell tutorial - Thinking recursively"
 date:   2013-04-10
 categories: programming
 tags: functional-programming, haskell, tutorial haskell-tutorial
-image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
 ---
 
 <p>
-    There are more than a couple of meatless posts on the net about how the magical (not at all) functional programming paradigm is entirely different (no it isn't)
-    from everything you are used to, and how will it save the world (no it won't).
+    To understand this post, first you should learn...
+</p>
+
+<h3>Patterns and pattern matching</h3>
+
+<p>
+    Patterns allow you to deconstruct certain data structures with the same operators what you use to construct them.
+    This only works in certain places, but we focus on function definitions now.
+    Examine the following one:
+</p>
+
+{% highlight haskell %}
+summa :: [Int] -> Int
+summa list = if length list == 0
+    then 0
+    else head list + (summa (tail list))
+{% endhighlight %}
+
+<p>
+    This contains no pattern matching yet. We have to do a lot of grunt work by hand, checking the lenght of the list,
+    accessing the first element (head), calling the function recursively on the remaining list. Pattern matching can help to
+    lessen the pain:
+</p>
+
+{% highlight haskell %}
+summa :: [Int] -> Int
+summa [] = 0
+summa (x:xs) = x + summa xs
+{% endhighlight %}
+
+<p>
+    Much nicer, right? The cons operator (:) appends an element to a list, so the above quite intiutively reads like this: if we have an empty
+    list, the result is 0. If we have a list with at least one element (x appended to the possibly empty xs), the result is the first element +
+    summa the remaining list.
 </p>
 
 <p>
-    So let's try to approach Haskell, which is the <a href="http://stackoverflow.com/a/809983/441291">800-pound gorilla</a> in FP (functional programming) land, from a practical
-    angle, without empty buzzwords. If you think that this article also lacks meat, well, you are wrong because I am right, but nevertheless slap me in the face.
+    Another good example is the classic (but very inefficient) definition of Fibonacci numbers: 
+</p>
+
+{% highlight haskell %}
+fib :: Int -> Int
+fib 0 = 0
+fib 1 = 1
+fib n = fib (n-1) + fib (n-2)
+{% endhighlight %}
+
+<p>
+    The above calculates the fibonacci number in the nth position of the Fibonacci sequence.
+</p>
+
+<h3>Thinking recursively</h3>
+
+<p>
+    Every iterative algorithm and can be expressed as recursion and <a href="http://en.wikipedia.org/wiki/Vice_Versa">vice versa</a>.
+    In Haskell, recursion is the norm, since iteration is impossible to do without mutable variables. This can be tricky to imagine for newbies,
+    so let's look at a couple of examples.
+</p>
+
+{% highlight haskell %}
+-- Counts how many element satisfies the predicate in a list.
+count :: (a -> Bool) -> [a] -> Int
+count p xs = f 0 xs
+    where
+        f c [] = 0
+        f c (y:ys) =
+            let v = if p y then 1 else 0
+            in f (c + v) ys
+{% endhighlight %}
+
+<p>
+    The where construct in the above example is a simple way to define local functions and variables.
+    Where is similar to the <b>let ... in</b> form, the only difference is that ith let the definitions come before the expression body, with where
+    they stand after it.
 </p>
 
 <p>
-    I will intentionally remain in shallow waters to be easily digestible by the broadest possible audience.
+    Our count function works by defining a recursive local function called <b>f</b>, which passes state as one of its arguments.
+    Every recursive invocation can be tought of as one iteration. The same function in JavaScript would look like this:
 </p>
 
-<h3>Static type system with type inference</h3>
-
-<p>
-    Most programmers thinkink about static typing imagine something like this:
-</p>
-
-<pre>
-    Foo* foo = new(Foo);
-</pre>
-
-<p>
-    Usually when coders argue about wether static or dynamic typing is teh sh*t, they contrast the dynamically typed languages with C++/Java school of static typing (see above).
-    Sacrificing some sophistication the usual conclusion can be reduced to "static typing can catch more bugs but you have to type more" (let's not go into unit testing now).
-    If that's what you tought too, let me introduce you the <a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner">Hindley-Milner type inference</a>. Basically with the help of it,
-    the compiler can type check your code without requiring you to annotate your types in even one place (I lied, in rare cases, it may be required).
-</p>
-
-<p>
-    And no, Google's new language, Go does not have type inference, at least nothing comparable to what you can find in Haskell.
-    What the Go evangelists try to sell as type inference is a very little subset of (full) type inference. The Go way:
-</p>
-
-<pre>
-func nonsense(a int, b string) int {    // <- You have to annotate type or compilation fails.
-    c := 42 // <- "Initialization and declaration" which is being sold as type inference
-    return a + c
+{% highlight haskell %}
+function count(pred, list) {
+    var counter = 0
+    for (var i in list) {
+        if (pred(list[i]) == true) {
+            counter++
+        }
+    }
+    return counter
 }
-</pre>
+{% endhighlight %}
 
 <p>
-    The Haskell way:
+    A side note: a nice thing in Haskell is that we can be lazy (pun intended) and use the existing functions to express our thoughts. It really feels like synthesis.
+    Instead of controlling every nuance of the code, we can usually achieve our goals in a couple of steps. Our count function would look like:
 </p>
 
-<pre>
-nonsense a b = let c = 42 in a + c
-</pre>
+{% highlight haskell %}
+count :: count :: (a -> Bool) -> [a] -> Int
+count p xs = length $ filter p xs
+{% endhighlight %}
 
 <p>
-    That Haskell snippet will compile. What will be the type of it? You can query it by typing ":t nonsense" in GHCi
+    But currently we care about writing these functions ourselves to learn the thought process behind them. However, it would be silly to ignore the wide range of
+    already written functions in the Haskell standard library (Prelude). Yes, you've heard it! Unlike in C++ or a lot of other langauges, the Haskell Prelude
+    is full of readable, idiomatic functions. Reading them is a pleasure. Let's look at a couple of them.
 </p>
 
-<pre>
-> :t nonsense
-nonsense :: Num a => a -> t -> a
-</pre>
+{% highlight haskell %}
+map :: (a -> b) -> [a] -> [b]
+map _ []     = []
+map f (x:xs) = f x : map f xs
+{% endhighlight %}
 
 <p>
-    That type signature basically means: nonsense is a function, with two arguments, first is a, which can be any type, as long as that given type can be used as
-    a number (is an instance of type class Num. Don't confuse type classes with Javaish classes, they are more like interfaces). The second argument can be any type, without
-    restriction. Why? Because we did not use it! The return value has the same type as the first argument. This part can be quite tricky to nonhaskellers, because return type
-    polymorphism is very rare in mainstream languages.
+    The implementation is map is actually very straightforward, we apply the function f to the first element of a list, and append that element to the 
+    remaining of the also mapped list. If you are not already blown away by the elegance of it, I suggest you to learn Java.
+</p>
+
+{% highlight haskell %}
+filter :: (a -> Bool) -> [a] -> [a]
+filter _pred []    = []
+filter pred (x:xs)
+  | pred x         = x : filter pred xs
+  | otherwise      = filter pred xs
+{% endhighlight %}
+
+<p>
+    Filter is quite similar to map, but there is new syntax here: guards. Guards are basically pretty switches, the first case evaluating to true
+    will be evaluated. The definition reads: if the list is empty, return the empty list. If the list is not empty, check if the predicate holds true on
+    the first element of the list, if it does, append the given element to the remaining of the list.
 </p>
 
 <p>
-    As you can see, what we have here is the best of both worlds: compile time type checking without the requirement of annotating types by hand. Of course, type annotation is
-    useful for humans, but the Haskell compiler doesn't really care about it, he is clever enough to figure this out. In fact, a lot of times I (and I suspect others too, but I can't
-    speak for them) I write the function without type annotations, ask GHCi for the type signature and paste that into the source file to help others and my 2 months older version of
-    me understanding the code.
+    Most people when hear that Haskell has no mutable variables (not counting the IO monad, more on this later) are terrified by the idea
+    and they think that working with immutability is half impossible and half crazy. But in fact, recursive solutions are often very concise
+    and easy to write. Pattern matching helps us to visualize corner cases (empty list, zero, etc) when we have to terminate our recursion, or act differently.
 </p>
 
-<h3>Generics without breaking a sweat</h3>
+<h3>Performance</h3>
 
 <p>
-    As mindful readers may have already noticed in the above Haskell snippet, in Haskell you write generic code by default. You don't have to learn a template language
-    (there is a thing called Template Haskell but that is another story), you don't have to buy a 24 inch monitor to write generic function signatures. That is the default and
-    it comes for free.
-</p>
-
-<h3>Syntax without clutter</h3>
-
-<p>
-    One thing I noticed while learning Haskell, that the authors have a great sense of beauty. This can be generally said about the language as a whole, but it can be most easily
-    seen when looking at the syntax. Here are a couple of constructs side by side with the Go version, as that is a language I used directly before Haskell thus I hopefully
-    make no errors.
-</p>
-
-<pre>
-// Switch case
-
-// Go
-a := 20
-switch a {
-    case 10:
-            return "It's ten!"
-    case 20:
-            return "It's not ten :("
-}
-
-// Haskell
-let a = 20
-in case a of
-    10  -> "It's ten!"
-    20  -> "It's not ten :("
-
-// Anonymous function
-
-func (a, b int) int {
-    a + b
-}
-
-\a b -> a + b
-
-// Looping: transform a list/array
-
-// Go
-a := []int{1,2,3,4,5,6,7,8,9,10}
-f := func(a int) int {
-    return a+1
-}
-b := []int{}
-for _, v := range a {
-    b = append(b, v)
-}
-return v
-
-// Haskell
-let a = [1..10]
-    f = (+1)
-map f a
-</pre>
-
-<p>
-    The differences really add up. There are some outrageous claims on the net about how much you can save with functional programming in terms of line count, but I think
-    a good estimate is that you can at least halve the LOCs.
-</p>
-
-<h3>REPL</h3>
-
-<p>
-    Haskell is amongst the few statically typed languages what you can use interactively. GHCi is the Haskell compiler, and despite being a not too mainstream language, it is
-    the Haskell platform is a breeze to use, even on Windows, its a one click install, and you can double click on any hs files and GHCi starts. GHCi is an incredible productivity
-    boost. Just to name a few cool features: :t gives back the type of any expression, :i will display information about the given type, you can set GHCi to clock all expressions
-    (display the milliseconds spent calculating the expression). The possibilities are endless, really.
-</p>
-
-<h3>Type signatures are telling</h3>
-
-<p>
-    The information dense type signature of Haskell functions allow us to effectively search for a function by approximate type with the help of a tool like
-    <a href="http://www.haskell.org/hoogle/">Hoogle</a>.
-</p>
-
-<h3>Conclusion</h3>
-
-<p>
-    The general consensus on Haskell is that it's impractical. I think that opinion mainly stems from old experiences. I agree that it's still rough around some edges:
-    I am particularly worried about the lack of stack traces. The thought of running it on production servers and not seeing the source of an exception frankly scares the
-    sh*t out of me. But as a language it is very well designed, especially compared to the current mainstream languages.
+    Haskell lends itself especially well to recursive expressions. In imperative languages, recursion is considered slow, and iteration is preferred.
+    Since Haskell is optimized for recursion, you don't have to fear a performance
+    penalty. <a href="http://en.wikipedia.org/wiki/Tail_call">Tail call optimization</a> actually ensures that when a function calls itself in tail position
+    (see the summa example), the resulting machine code will be identical to loops.
 </p>

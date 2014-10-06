@@ -4,7 +4,6 @@ title:  "Haskell tutorial - Using GHC, GHCi"
 date:   2013-03-31
 categories: programming
 tags: functional-programming, haskell, tutorial haskell-tutorial, ghc, ghci
-image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
 ---
 
 <p>
@@ -17,9 +16,9 @@ image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
     Let's say you create a file "C:/hsfiles/hello.hs". Copy and paste the following line into the file:
 </p>
 
-<pre>
+{% highlight haskell %}
 main = print "Hello world."
-</pre>
+{% endhighlight %}
 
 <p>
     The main function is where your program starts. If you write a library, that will obviously have no main function, but now we want to
@@ -61,10 +60,10 @@ main = print "Hello world."
     which prints the type of a given value or expression.
 </p>
 
-<pre>
+{% highlight haskell %}
 > :t main
 main :: IO ()
-</pre>
+{% endhighlight %}
 
 <p>
     Don't be afraid if you don't understand that now, we will cover it later. The ":i" command is similar, but more detailed: it prints the
@@ -77,10 +76,10 @@ main :: IO ()
     remember now that when we define something with the help of the "let" construct, we do that because of that. The difference is:
 </p>
 
-<pre>
+{% highlight haskell %}
 -- Define a function in a file
 f x y = x + y
 
 -- Define a function in the interpreter (GHCi)
 let f x y = x + y
-</pre>
+{% endhighlight %}

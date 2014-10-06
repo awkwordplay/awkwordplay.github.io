@@ -4,7 +4,6 @@ title:  "Haskell tutorial - Basics"
 date:   2013-04-05
 categories: programming
 tags: functional-programming, haskell, tutorial haskell-tutorial
-image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
 ---
 
 <h3>Expressions vs. statements</h3>
@@ -15,20 +14,20 @@ image: /assets/article_images/2014-08-29-welcome-to-jekyll/desktop.jpg
     The first line contains a couple of terms wich will be our main vocabulary in this post.
 </p>
 
-<pre>
+{% highlight haskell %}
 3       -- Constant
 "Hello" -- Constant
 x       -- Variable
 y       -- Variable
 1 + 4   -- Expression, when evaluated, yields a value (5)
-</pre>
+{% endhighlight %}
 
 <p>
     Haskell is an expression based language. There are no statements in it, like in imperative ones. The following
     example illustrates the difference between an expression and a statement.
 </p>
 
-<pre>
+{% highlight js %}
 // JavaScript
 var condition = true
 var x
@@ -37,13 +36,15 @@ if (condition) {
 } else {
     x = 5
 }
+{% endhighlight %}
 
+{% highlight haskell %}
 -- Haskell
 let condition = True
     x = if condition
         then 3
         else 5
-</pre>
+{% endhighlight %}
 
 <p>
     As you can see, in Haskell the if expression returns a value, while in JavaScript the if is a statement, and you modify the value of x
@@ -53,7 +54,7 @@ let condition = True
     a type error:
 </p>
 
-<pre>
+{% highlight haskell %}
 > if True then 1 else "Hello"
 
 <interactive>:2:14:
@@ -63,7 +64,7 @@ let condition = True
     In the expression: 1
     In the expression: if True then 1 else "Hello"
     In an equation for `it': it = if True then 1 else "Hello"
-</pre>
+{% endhighlight %}
 
 <p>
     The error itself may look scary for a Haskell beginner, but fear not, you will develop an intuition for them pretty soon.
@@ -76,34 +77,38 @@ let condition = True
     Function application may be quite unusual for programmers coming from imperative languages: there are no parentheses, only spaces:
 </p>
 
-<pre>
+{% highlight js %}
 // JavaScript
 add(1, 2)
+{% endhighlight %}
 
+{% highlight haskell %}
 -- Haskell
 add 1 2
-</pre>
+{% endhighlight %}
 
 <p>
     This allows us to spare a couple of parens. You can evaluate an expression before passing it to a function too:
 </p>
 
-<pre>
+{% highlight js %}
 // JavaScript
 add(1, sub(4, 3))
+{% endhighlight %}
 
+{% highlight haskell %}
 -- Haskell
 add 1 (sub 4 3)
-</pre>
+{% endhighlight %}
 
 <p>
     In Haskell, expressions are evaluated only when needed, which is called non-strict, or lazy evaluation. The following snippet does not actually
     raise an error, contrary to the intuition.
 </p>
 
-<pre>
+{% highlight haskell %}
 let list = [1, 2, error "Hey.", 3]
-</pre>
+{% endhighlight %}
 
 <p>
     In a strict language, we could not even store the list, because the evaluation of the error would happen before constructing the list.
@@ -126,11 +131,11 @@ let list = [1, 2, error "Hey.", 3]
     Defining values at top level is easy:
 </p>
 
-<pre>
+{% highlight haskell %}
 x = 3
 y = "Hello"
 z = y
-</pre>
+{% endhighlight %}
 
 <p>
     Ignoring the precise type of those expression, I think you can guess that x will be a number, y is a string,
@@ -143,18 +148,18 @@ z = y
     This is the exciting part! We will do actual computation here. The fact is, Haskell is an shamelessly concise language:
 </p>
 
-<pre>
+{% highlight haskell %}
 add x y = x + y
-</pre>
+{% endhighlight %}
 
 <p>
     That's it! That line will add two numbers. Admittedly not too useful, but hey! We have to start somewhere. Using it is also as easy as ABC:
 </p>
 
-<pre>
+{% highlight haskell %}
 > add 3 5
 8
-</pre>
+{% endhighlight %}
 
 <p>
     To venture deeper into the language we will have to befriend the types, but that is a story for an other day.
