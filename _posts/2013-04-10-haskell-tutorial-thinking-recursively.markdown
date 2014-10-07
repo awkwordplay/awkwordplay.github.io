@@ -2,8 +2,6 @@
 layout: post
 title:  "Haskell tutorial - Thinking recursively"
 date:   2013-04-10
-categories: programming
-tags: functional-programming, haskell, tutorial haskell-tutorial
 ---
 
 <p>

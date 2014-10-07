@@ -2,8 +2,6 @@
 layout: post
 title:  "Haskell tutorial - Basics"
 date:   2013-04-05
-categories: programming
-tags: functional-programming, haskell, tutorial haskell-tutorial
 ---
 
 <h3>Expressions vs. statements</h3>

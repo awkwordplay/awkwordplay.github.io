@@ -2,8 +2,6 @@
 layout: post
 title:  "Haskell tutorial - Installation"
 date:   2013-04-04
-categories: programming
-tags: functional-programming, haskell, tutorial haskell-tutorial, ghc, ghci
 ---
 
 <p>

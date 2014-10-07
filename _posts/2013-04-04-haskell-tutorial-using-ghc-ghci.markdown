@@ -2,8 +2,6 @@
 layout: post
 title:  "Haskell tutorial - Using GHC, GHCi"
 date:   2013-03-31
-categories: programming
-tags: functional-programming, haskell, tutorial haskell-tutorial, ghc, ghci
 ---
 
 <p>
