@@ -29,20 +29,20 @@ for k, _ := range index {
 
 Take a language with generics support, Haskell, this can be abstracted away in a function,  Data.List.nub works wonders (in ghci:)
 
-```haskell
+{% highlight haskell %}
 > import Data.List
 > :t nub
 > nub [8, 6, 8, 2, 4, 4, 5, 9]
 [8,6,2,4,5,9]
-```
+{% endhighlight %}
 
 (For those who are bothered about the exponential algorithmic complexity of nub, nub require s the elements of the list to be instances of the Eq typeclass, that is why it performs soo poorly. If we are stricter and require the elements to be instances of Ord typclass, as is the case with Go's maps indices, we can write a more efficient function, which pretty much does the same thing as the Go code snippet above - puts the list elements to a map and then converts back to a list:)
 
-```
+{% highlight haskell %}
 import qualified Data.Map as M
 let nubWell xs = map (\(k, _) -> k) . M.toList . M.fromList $ map (\x -> (x, ())) xs
 > :t nubWell
 nubWell :: Ord b => [b] -> [b]
 > nubWell [8, 6, 8, 2, 4, 4, 5, 9]
 [2,4,5,6,8,9]
-```
+{% endhighlight %}
