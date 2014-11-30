@@ -11,7 +11,7 @@ Working with slices
 
 Deduping elements of a slice happens the following way in go:
 
-```go
+{% highlight go %}
 // Given the following list:
 m := []int{8, 6, 8, 2, 4, 4, 5, 9}
 // For loop is the only generic way to traverse slices, you we have to write the following:
@@ -25,7 +25,7 @@ for k, _ := range index {
 	deduped = append(deduped, k)
 }
 // Hooray, we can use the 'deduped' slice!
-```
+{% endhighlight %}
 
 Take a language with generics support, Haskell, this can be abstracted away in a function,  Data.List.nub works wonders (in ghci:)
 
