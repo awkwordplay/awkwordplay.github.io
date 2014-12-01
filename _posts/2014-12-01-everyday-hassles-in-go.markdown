@@ -360,4 +360,4 @@ Type assertions are completely type unsafe - a function should never ever make a
 
 ### Conclusion
 
-To be finished
+To be finished.
