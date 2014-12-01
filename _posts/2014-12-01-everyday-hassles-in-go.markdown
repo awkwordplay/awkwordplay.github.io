@@ -298,15 +298,13 @@ The biggest reason why go had to abandon the very concept of defining methods on
 
 Interestingly, Go already has syntax which would be well suited to this (not like syntax is an important matter when it comes to issues like this), as it is noted in <a href="https://groups.google.com/forum/#!topic/golang-nuts/Hbxekd9g09c">this thread<a> by Rasmus Schultz
 
-<quote>
-am I missing something here?
-
-just learning Go, and I was under the impression that one of the key reasons for the "detached" method-declaration syntax, was that you would be able to extend somebody else's type with new methods required by your program, in a "non-invasive" manner.
-
-so you can't add methods to a type unless it was declared in the local package, is that right?
-
-what exactly is the point of the detached method-declarations then?
-</quote>
+> am I missing something here?
+>
+> just learning Go, and I was under the impression that one of the key reasons for the "detached" method-declaration syntax, was that you would be able to extend somebody else's type with new methods required by your program, in a "non-invasive" manner.
+>
+> so you can't add methods to a type unless it was declared in the local package, is that right?
+>
+> what exactly is the point of the detached method-declarations then?
 
 #### No type aliases
 
