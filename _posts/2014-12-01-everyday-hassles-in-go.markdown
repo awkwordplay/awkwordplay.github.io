@@ -110,7 +110,7 @@ func dedupe(xs sort.Interface) {
 
 Before finishing our function we realize one thing - we can not iterate over the sort.Interface:
 
-{% highlight %}
+{% highlight go %}
 prog.go:6: type sort.Interface is not an expression
 prog.go:7: cannot range over xs (type sort.Interface)
  [process exited with non-zero status]
