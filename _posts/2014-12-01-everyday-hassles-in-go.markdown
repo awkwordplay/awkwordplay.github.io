@@ -81,7 +81,7 @@ Uh-oh again. We even had to stop typing. We can not use the empty interface as o
 
 Let's look for an other approach - surely the Go authors have paved the way for us. Let's take a look at the <a href="http://golang.org/pkg/sort/">sort package</a>. We see a quite descriptively named <a href="http://golang.org/pkg/sort/#Interface">sort.Interface</a> type there:
 
-```
+{% highlight go %}
 type Interface interface {
         // Len is the number of elements in the collection.
         Len() int
@@ -91,7 +91,7 @@ type Interface interface {
         // Swap swaps the elements with indexes i and j.
         Swap(i, j int)
 }
-```
+{% endhighlight %}
 
 This would be all good, but no methods can be defined on builtin types! Don't worry! The <a href="http://golang.org/pkg/sort/#IntSlice">IntSlice</a> type comes for the rescue! We only have to typecast our []int into an IntSlice and we can use all the functions written by other very smart people. But let's go back to the deduping function. Let's try to use the sort.Interface to write our own deduping function. After all, we can compare elements of a slice with it.
 
