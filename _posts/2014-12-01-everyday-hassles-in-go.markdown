@@ -4,9 +4,9 @@ title:  "Everyday hassles in Go"
 date:   2014-12-01
 ---
 
-**This article is not baked yet**
+The following article is not finished yet. The article might interest people who are familiar with Go and who are curious how functional languages solve certain problem Go has.
 
-Go became a reliable, if a bit simple minded friend of mine during the past years. I use it in my day job and for side projects alike. Despite using (and liking*) it a lot, I have to admit the language could be improved a lot by borrowing battletested ideas from more modern languages. Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
+Go became a reliable, if a bit simple minded friend of mine during the past years. I use it in my day job and for side projects alike. Despite using (and liking*) it a lot, I have to admit the language could be improved a lot by borrowing battletested ideas from more modern languages. Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not even know that there is a better way to things. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
 
 This lack of perspective in the Go community further hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about it's potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go has an immense responsibility when it comes to improving our industry as a whole.
 
@@ -16,11 +16,22 @@ To show the limitations of some of the archaic concepts present in Go - here are
 
 ### Lack of generics
 
-Perhaps the most elusive, but rather destructive aspect of the lack of generics in Go is how the language forces the user to go into uninteresting details while expressing ideas, distrupting the programmer's flow. Unfortunately a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>. For them, here are a couple of examples why generics make sense.
+Generics are well supported by a wide range of languages, and is one of the most requested lacking features of Go. The usual response from the Go authors is that implementing generics will either slow down compilation, the code, or the programmer. While that is almost a believable reason, the funnier part of their reasoning is (excerpt from FAQ):
 
-Here are some examples to demonstrate the effect:
+> Go's built-in maps and slices, plus the ability to use the empty interface to construct containers (with explicit unboxing) mean in many cases it is possible to write code that does what generics would enable, if less smoothly.
 
-#### Deduping slice elements
+(<a href="https://golang.org/doc/faq#generics">link<a>)
+
+Well, how less smoothly is not stated, but I would argue even minor annoyances can grow weary if encountered frequently enough.
+Let's see how do these annoyances look like.
+
+#### Flow distruption
+
+Perhaps the most elusive, but rather destructive aspect of the lack of generics in Go is how the language forces the user to go into uninteresting details while expressing ideas, distrupting the programmer's flow. Those who never used generics might not notice this, so here are some quite arbitrary examples:
+
+(Quiet a good chunk of this blog post will be dedicated to help people who never used generics to develop an intuition why generics are useful. If you are not interested in this part, scroll down a bit.)
+
+##### Deduping slice elements
 
 Deduping elements of a slice happens the following way in go:
 
@@ -156,7 +167,7 @@ Please note that our version of nub is not order preserving - neither is the Go 
 
 <a href="https://groups.google.com/forum/#!topic/golang-nuts/-pqkICuokio">This thread</a> discusses the same problem, without finding a nice solution - because there isn't any - the type system is just not expressive enough.
 
-#### Standard list operations
+##### Standard list operations
 
 In go we are forced to use iteration as our tool to traverse slices and maps - because iteration is polymorphic builtin construct. The verbosity of iteration is mind-bogging, combined with appending, ifs and other constructs makes the code way more involved than it should be.
 
@@ -286,29 +297,76 @@ The compiler happily accepts this while this is clearly a bug. Tools like Go vet
 
 With the help of ADTs (and pattern matching) this problem can be easily detected (more on this later).
 
-### Methods, interfaces, and other minor annoyances
+### Interfaces are misdesigned
 
-#### Interfaces are implemented implicitly
+#### Interfaces are implemented implicitly/no way to define how a foreign type implements an interface
 
-Interfaces in Go are implemented implicitly, which means if someone happens to come along and creates an interface with a method which your type already has your type immediately implements that interface - wether you like it or not. While this happens rather rarely in practice (in my experience), I do not understand the motivation behind this design decision - usually Go prefers explicitness over implicitness, why the exception here? When writing a methods which is implementing an interface one has a specific interface in mind anyway - then why lose this information?
+Interfaces in Go are implemented implicitly, which means if someone happens to come along and creates an interface with a method which your type already has your type immediately implements that interface - wether you like it or not. While this happens rather rarely in practice (in my experience), a consequence of this is much more severe -
 
-#### No way to define methods on foreign types
+I do not understand the motivation behind this design decision - usually Go prefers explicitness over implicitness, why the exception here? When writing a methods which is implementing an interface one has a specific interface in mind anyway - then why lose this information?
 
-The biggest reason why go had to abandon the very concept of defining methods on foreign types is because interfaces are implemented implicitly - a decision which increases Go's inconvenience factor severely. It saves a bit of typing in the short term but has utterly devastating consequences in the long term: one has to created new named type
+The biggest reason why go had to abandon the very concept of defining methods on foreign types is because interfaces are implemented implicitly. It saves a bit of typing in the short term but has utterly devastating consequences in the long term: one has to created new named type
 
-Interestingly, Go already has syntax which would be well suited to this (not like syntax is an important matter when it comes to issues like this), as it is noted in <a href="https://groups.google.com/forum/#!topic/golang-nuts/Hbxekd9g09c">this thread<a> by Rasmus Schultz
+Interestingly, Go already has syntax which would be well suited to this (not like syntax is an important matter when it comes to issues like this), as it is noted in <a href="https://groups.google.com/forum/#!topic/golang-nuts/Hbxekd9g09c">this thread</a> by Rasmus Schultz.
 
-> am I missing something here?
->
-> just learning Go, and I was under the impression that one of the key reasons for the "detached" method-declaration syntax, was that you would be able to extend somebody else's type with new methods required by your program, in a "non-invasive" manner.
->
-> so you can't add methods to a type unless it was declared in the local package, is that right?
->
-> what exactly is the point of the detached method-declarations then?
+> I was under the impression that one of the key reasons for the "detached" method-declaration syntax, was that you would be able to extend somebody else's type with new methods required by your program, in a "non-invasive" manner.
+
+#### Lack of deriving
+
+Default implementations for certain interfaces should be provided. How can Go print out our structs or maps currectly? We don't know. It is done with reflection, which is runtime concept and sidesteps the type system entirely. The ad hoc, edge case laden nature of Go shows here again. For those who are unfamiliar with the concept.
+
+If we define a record (struct in Go land), and we want to print an instance of it, we get a compile error.
+
+{% highlight haskell %}
+> data Customer = Customer { name :: String, age :: Int }
+> print $ Customer "Joe" 14
+
+<interactive>:3:1:
+    No instance for (Show Customer) arising from a use of ‘print’
+    In the expression: print
+    In the expression: print $ Customer "Joe" 14
+    In an equation for ‘it’: it = print $ Customer "Joe" 14
+{% endhighlight %}
+
+The compiler error tells us that our Customer type is not an instance of the Show typeclass - in Go terminology, the Customer type does not implement the Show interface. Inspecting the type signature of print we see it indeed requires any element passed to it to be an instance of Show:
+
+{% highlight haskell %}
+> :t
+print :: Show a => a -> IO ()
+{% endhighlight %}
+
+Using derive, we can get default implementations for free:
+
+{% highlight haskell %}
+> data Customer = Customer { name :: String, age :: Int } deriving Show
+> print $ Customer "Joe" 14
+Customer {name = "Joe", age = 14}
+{% endhighlight %}
+
+Also interesting how our Customer type 'officially' became an instance of the Show typeclass:
+
+{% highlight haskell %}
+Prelude> :i Customer
+data Customer = Customer {name :: String, age :: Int}
+  	-- Defined at <interactive>:7:1
+instance Show Customer -- Defined at <interactive>:7:66
+{% endhighlight %}
+
+So from the point of view of the the type system, 
+
+#### Type assertions
+
+Type assertions are completely type unsafe - a function should never ever make assumptions about the underlying type of an interface type - that completely defies the purpose of interfaces to begin with.
+
+### Other minor annoyances
+
+#### General inelegance
+
+The obsession with operators (why can't they be functions?).
 
 #### No type aliases
 
-Sometimes it is good to have type aliases which are basically macros doing simple string replace in the source, to increase readability, for example the <a href="https://github.com/go-mgo/mgo">excellent MongoDB driver, mgo</a> defines a convenience type M:
+Sometimes it is good to have type aliases which are basically macros doing simple string replace in the source, to increase readability, for example the excellent MongoDB driver, <a href="https://github.com/go-mgo/mgo">mgo</a> defines a convenience type M:
 
 {% highlight go %}
 type M map[string]interface{}
@@ -351,10 +409,6 @@ customer := M{
 {% endhighlight %}
 
 Unfortunately, in Go, M and map[string]interface{} become completely separate types - we have to typecast from one type to satisfy the compiler.
-
-#### Type assertions
-
-Type assertions are completely type unsafe - a function should never ever make assumptions about the underlying type of an interface type - that completely defies the purpose of interfaces to begin with.
 
 ### Conclusion
 
