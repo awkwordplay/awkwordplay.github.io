@@ -10,7 +10,7 @@ Go became a reliable, if a bit simple minded friend of mine during the past year
 
 This lack of perspective in the Go community further hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about it's potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go has an immense responsibility when it comes to improving our industry as a whole.
 
-To show the limitations of some of the archaic concepts present in Go - here are the analysis if some of the features (or the lack of them) I consider unfortunate, with use cases and accompanying code. Some of these will be highly subjective, and the examples may be quiet arbitrary. Most of the difficulties I encounter could be fixed by a relatively small number of changes (<a href="http://en.wikipedia.org/wiki/Pareto_principle">the 80/20 rule?</a>).
+To show the limitations of some of the archaic concepts present in Go - here are the analysis if some of the features (or the lack of them) I consider unfortunate, with use cases and accompanying code. Some of these will be highly subjective, and the examples may be quiet arbitrary. Most of the difficulties listed here could be fixed by a relatively small number of changes (<a href="http://en.wikipedia.org/wiki/Pareto_principle">the 80/20 rule?</a>).
 
 *Mostly due to the amazingly comprehensive standard library. For such a young language anyway. The documentation is also brilliant.
 
@@ -22,8 +22,7 @@ Generics are well supported by a wide range of languages, and is one of the most
 
 (<a href="https://golang.org/doc/faq#generics">link<a>)
 
-Well, how less smoothly is not stated, but I would argue even minor annoyances can grow weary if encountered frequently enough.
-Let's see how do these annoyances look like.
+Well, how less smoothly is not stated, but I would argue even minor annoyances can grow weary if encountered frequently enough. And even these seemingly minor annoyances can se.
 
 #### Flow distruption
 
@@ -33,7 +32,7 @@ Perhaps the most elusive, but rather destructive aspect of the lack of generics 
 
 ##### Deduping slice elements
 
-Deduping elements of a slice happens the following way in go:
+Let's take a ratherDeduping elements of a slice happens the following way in go:
 
 {% highlight go %}
 package main
