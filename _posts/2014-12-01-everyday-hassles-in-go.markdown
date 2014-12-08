@@ -296,6 +296,26 @@ func main() {
 
 These operations would be possible in Go with the help of generics... although the type signature of the lambda would have to be stated explicitly, since Go <a href="http://programmers.stackexchange.com/questions/253558/type-inference-in-golang-haskell">does not support type inference</a> (not the rather powerful <a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindler-Milner</a> one anyway).
 
+#### The billion dollar mistake
+
+Nil pointers, as implicit valid values for all pointer types, and interfaces are one fo the most frequent sources of bugs. The problem lies in the fact that one can dereference a pointer without proving that it actually holds a non-nil value, eg:
+
+{% highlight go %}
+file, _ = os.Open("file.txt")
+file.Chmod(777)
+{% endhighlight %}
+
+Is perfectly valid as far as the compiler is concerned. Meanwhile, using Option or Maybe types the same mistake can not be done:
+
+{% highlight haskell %}
+> case find (==2) [3..5] of
+>	Just x 	-> print "Found! Yay :)"
+>   Nothing -> print "Not found :("
+"Not found :("
+{% endhighlight %}
+
+The different cases must be handled explicitly.
+
 #### Empty interfaces everywhere
 
 Without generics support, it is impossible to create a generic type parametrized over an other one. It is especially painful when dealing with container-like types, sets, trees etc. 
@@ -409,13 +429,13 @@ With the help of ADTs (and pattern matching) this problem can be easily detected
 
 ### Interfaces are misdesigned
 
-#### Interfaces are implemented implicitly/no way to define how a foreign type implements an interface
+#### Interfaces are implemented implicitly
 
-Interfaces in Go are implemented implicitly, which means if someone happens to come along and creates an interface with a method which your type already has your type immediately implements that interface - wether you like it or not. While this happens rather rarely in practice (in my experience), a consequence of this is much more severe -
+Interfaces in Go are implemented implicitly, which means if someone happens to come along and creates an interface with a method which your type already has your type immediately implements that interface - wether you like it or not. While this happens rather rarely in practice (in my experience), the implicit nature of this feels out of place - usually Go prefers explicitness over implicitness, why the exception here? When writing a methods which is implementing an interface one has a specific interface in mind anyway - then why lose this information? In fact, readability suffers - one has no way to know which interfaces a type implements. It also prevents us to state how non local types implement an interface...
 
-I do not understand the motivation behind this design decision - usually Go prefers explicitness over implicitness, why the exception here? When writing a methods which is implementing an interface one has a specific interface in mind anyway - then why lose this information?
+#### No way to define how a foreign type implements an interface
 
-The biggest reason why go had to abandon the very concept of defining methods on foreign types is because interfaces are implemented implicitly. It saves a bit of typing in the short term but has utterly devastating consequences in the long term: one has to created new named type
+Who knows better how a certain type satisfies an interface than the person who defined the interface? Requiring a package to be modified so a type can implement as interface severely hinders extensibility.
 
 Interestingly, Go already has syntax which would be well suited to this (not like syntax is an important matter when it comes to issues like this), as it is noted in <a href="https://groups.google.com/forum/#!topic/golang-nuts/Hbxekd9g09c">this thread</a> by Rasmus Schultz.
 
@@ -462,7 +482,7 @@ data Customer = Customer {name :: String, age :: Int}
 instance Show Customer -- Defined at <interactive>:7:66
 {% endhighlight %}
 
-So from the point of view of the the type system, 
+So while the implementation is 'magic', in all other regards these type classes behave the same way as they would be user implemented.
 
 #### Type assertions
 
@@ -472,7 +492,26 @@ Type assertions are completely type unsafe - a function should never ever make a
 
 #### General inelegance
 
-The obsession with operators (why can't they be functions?).
+##### Superflous syntax
+
+Almost everywhere superflous brackets of all types can be found. What is the purpose of:
+
+{% highlight go %}
+map[string]interface{}
+{% endhighlight %}
+
+vs 
+
+{% highlight go %}
+Map String Any
+{% endhighlight %}
+(hypothetical Haskell equivalent)
+
+?
+
+##### Operators should be functions
+
+The only reason operators are not functions is because the type system is not sophisticated enough to describe them.
 
 #### No type aliases
 
@@ -522,4 +561,6 @@ Unfortunately, in Go, M and map[string]interface{} become completely separate ty
 
 ### Conclusion
 
-To be finished.
+Go focuses on simplicity, but the lack of strong foundations introduces corner cases in a lot of places, making the language more complex and less useful than it could be. But even with those edge cases, Go is still easier to learn than most other typed languages, and that is probably its the biggest selling point. It very much feels like a dynamic language with a very minimalistic type system. This has the positive effect of introducing people who were exposed only to dynamic langauges to the world of type system due to its approachability. However, this simplicity may very well adversely affect the Go programmers by accepting suboptimal solutions.
+
+The support and hype it receives might be better spent on more novel languages with bigger potential to better our industry.
