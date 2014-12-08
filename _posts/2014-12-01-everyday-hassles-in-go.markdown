@@ -6,7 +6,7 @@ date:   2014-12-01
 
 The following article is not finished yet. The article might interest people who are familiar with Go and who are curious how functional languages solve certain problem Go has.
 
-Go became a reliable, if a bit simple minded friend of mine during the past years. I use it in my day job and for side projects alike. Despite using (and liking*) it a lot, I have to admit the language could be improved a lot by borrowing battletested ideas from more modern languages. Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not even know that there is a better way to things. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
+Go became a reliable, if a bit overly simple friend of mine during the past years. I use it in my day job and for side projects alike. Despite using (and liking*) it a lot, I have to admit the language could be improved a lot by borrowing battletested ideas from more modern languages. Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not even know that there is a better way to things. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
 
 This lack of perspective in the Go community further hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about it's potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go has an immense responsibility when it comes to improving our industry as a whole.
 
@@ -22,17 +22,17 @@ Generics are well supported by a wide range of languages, and is one of the most
 
 (<a href="https://golang.org/doc/faq#generics">link<a>)
 
-Well, how less smoothly is not stated, but I would argue even minor annoyances can grow weary if encountered frequently enough. And even these seemingly minor annoyances can se.
-
-#### Flow distruption
-
-Perhaps the most elusive, but rather destructive aspect of the lack of generics in Go is how the language forces the user to go into uninteresting details while expressing ideas, distrupting the programmer's flow. Those who never used generics might not notice this, so here are some quite arbitrary examples:
+Well, how less smoothly? Let's investigate.
 
 (Quiet a good chunk of this blog post will be dedicated to help people who never used generics to develop an intuition why generics are useful. If you are not interested in this part, scroll down a bit.)
 
-##### Deduping slice elements
+#### Bye-bye code reuse
 
-Let's take a ratherDeduping elements of a slice happens the following way in go:
+A rather suprising set of functionality is missing from the standard library: a type of 'bread and butter' code which deals with <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-List.html">simple but often encountered scenarios</a> what no programmer should implement, because it is simply a waste of brainpower cycles - there is no gain to be won by reimplementing - let's say - deduping elements in a slice.
+
+##### Example: Deduping slice elements
+
+Deduping elements of a slice happens the following way in go:
 
 {% highlight go %}
 package main
@@ -60,7 +60,7 @@ func main() {
 {% endhighlight %}
 (<a href="http://play.golang.org/p/Mo_ZfbJNJF">playground link</a>)
 
-For those who are not familiar with the concept of generics, here is a though experiment: let's refactor that bit of information by moving it out to a function:
+For those who are not familiar with the concept of generics, here is a though experiment: let's refactor that bit of code by moving it out to a function:
 
 {% highlight go %}
 package main
@@ -78,7 +78,7 @@ func deduper(xs []int) []int {
 }
 {% endhighlight %}
 
-Uh-oh: now our method only works on maps - our for loops would be still generic, but the function definition forces us to tell the type of the input argument. It is an int slice. If somehow we could tell the compiler that we don't care what kind of slice it is!
+Uh-oh: now our method only works on int slices - our for loops would be still generic, but the function definition forces us to tell the type of the input argument. It is an int slice. If somehow we could tell the compiler that we don't care what kind of slice it is!
 
 You may ask - what if we use the interface{} interface type? It is a bit ugly, but it works! Let's try that!
 
@@ -126,7 +126,27 @@ prog.go:7: cannot range over xs (type sort.Interface)
  [process exited with non-zero status]
 {% endhighlight %}
 
-The main problem here is that we've lost information - the sort.Interface is not a slice anymore. We've lost the ability to iterate over it the moment we created an interface out of it - which was not our intention at all. We only had to do that due to Go's inability to express concepts in a generic way. Interfaces are very one dimensional. We can not build on top of them. In an expressive language, like haskell's, we can say: "given a type 'a' which elements can be compared against each other to see if they are equivalent, we can write a function which removes duplicates from a list (slice) of these elements".
+The main problem here is that we've lost information - the sort.Interface is not a slice anymore. We've lost the ability to iterate over it the moment we created an interface out of it. We could provide all the operations which can be done on a slice in an interface, in the following way:
+
+{% highlight go %}
+type Slice interface{
+	Get(i int) interface{}
+	// ...
+{% endhighlight %}
+
+We pretty much had to stop at the very first method, we have to abuse the interface{} type everywhere. If only we could write something like the following:
+
+{% highlight go %}
+type Slice a interface {
+	Get(i int) a
+	Len() int
+	Append(a) []a
+}
+{% endhighlight %}
+
+That way, our compiler would know that the Get method of a Slice Int returns an int, the Get method of a Slice String returns a string etc.
+
+In an expressive type system, like haskell's, we can do exactly that. The deduping example can be stated the following way: "given a type 'a' which elements can be compared against each other to see if they are equivalent, we can write a function which removes duplicates from a list of these elements".
 
 That function, in the Haskell standard library, is Data.List.nub:
 
@@ -166,9 +186,15 @@ Please note that our version of nub is not order preserving - neither is the Go 
 
 <a href="https://groups.google.com/forum/#!topic/golang-nuts/-pqkICuokio">This thread</a> discusses the same problem, without finding a nice solution - because there isn't any - the type system is just not expressive enough.
 
+#### Flow distruption
+
+Perhaps the most elusive, but rather destructive aspect of the lack of generics in Go is how the language forces the user to go into uninteresting details while expressing ideas, distrupting the programmer's flow. We don't have to venture far to see examples of this - we can stay at the topic of list operations, as we did in the previous example.
+
 ##### Standard list operations
 
-In go we are forced to use iteration as our tool to traverse slices and maps - because iteration is polymorphic builtin construct. The verbosity of iteration is mind-bogging, combined with appending, ifs and other constructs makes the code way more involved than it should be.
+In go we are forced to use iteration as our tool to traverse slices and maps - because iteration is a polymorphic builtin construct. The verbosity of iteration is mind-bogging, combined with appending, ifs and other constructs makes the code way more involved than it should be.
+
+###### Filter
 
 Let's observe a scenario when we want to remove elements from a slice:
 
@@ -209,7 +235,66 @@ for _, x := range xs {
 [0,1,2,3,4,6]
 {% endhighlight %}
 
-These operations would be possible in Go with the help of generics... although the type signature of the lambda would have to be stated explicitly, since Go <a href="http://programmers.stackexchange.com/questions/253558/type-inference-in-golang-haskell">does not support type inference</a> (not the rather powerful Hindler-Milner anyway).
+###### Map
+
+Increase every number by in in an array:
+
+{% highlight go %}
+package main
+
+import "fmt"
+
+func incByOne(xs []int) xs {
+	ret := []int{}
+	for _, v := range ints {
+		ret = append(ret, v+1)
+	}
+	return ret
+}
+
+func main() {
+	ints := []int{1,2,3,4,5,6,7,8,9,10}
+	fmt.Println(incByOne(ints))
+}
+{% endhighlight %}
+(<a href="http://play.golang.org/p/sykA1S07-A">playground link</a>)
+
+{% highlight haskell %}
+> let incByOne xs = map (+1) xs
+> incByOne [1..10]
+[2,3,4,5,6,7,8,9,10,11]
+{% endhighlight %}
+
+###### Folding
+
+Summing numbers:
+
+{% highlight go %}
+package main
+
+import "fmt"
+
+func mySum(xs []int) int {
+	ret := 0
+	for _, v := range xs {
+		ret += v
+	}
+	return ret
+}
+
+func main() {
+	fmt.Println(mySum([]int{1,2,3,4,5}))
+}
+{% endhighlight %}
+(<a href="http://play.golang.org/p/gspWQYH1AT">playground link</a>)
+
+{% highlight haskell %}
+> let mySum xs = foldl (+) 0 xs
+> mySum [1..5]
+15
+{% endhighlight %}
+
+These operations would be possible in Go with the help of generics... although the type signature of the lambda would have to be stated explicitly, since Go <a href="http://programmers.stackexchange.com/questions/253558/type-inference-in-golang-haskell">does not support type inference</a> (not the rather powerful <a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindler-Milner</a> one anyway).
 
 #### Empty interfaces everywhere
 
@@ -271,7 +356,33 @@ All the possible values would be present at all times - even if they are not bei
 
 #### A rainbow of grey, grey, and grey
 
-Apart from readability, type safety suffers as well. The moment we need something to be able to hold more than one type, suddenly it becomes
+Apart from readability, type safety suffers as well. The moment we need something to be able to hold more than one type, suddenly we are forced to use interface{}
+
+A very good example is the definition of a JSON value. In Haskell, the type reads clearly:
+
+{% highlight haskell %}
+-- | A JSON \"object\" (key\/value map).
+type Object = HashMap Text Value
+
+-- | A JSON \"array\" (sequence).
+type Array = Vector Value
+
+-- | A JSON value represented as a Haskell value.
+data Value = Object !Object
+           | Array !Array
+           | String !Text
+           | Number !Number
+           | Bool !Bool
+           | Null
+             deriving (Eq, Show, Typeable)
+{% endhighlight %}
+(<a href="http://hackage.haskell.org/package/aeson-0.6.1.0/docs/src/Data-Aeson-Types-Internal.html#Value"link</a>)
+
+A JSON Value is an object, a string, a number, a bool or a Null value. What is the best we can do in Go?
+
+{% highlight go %}
+type JSON map[string]interface{}
+{% endhighlight %}
 
 #### Multiple return values
 
