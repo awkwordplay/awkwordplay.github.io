@@ -376,7 +376,7 @@ data Value = Object !Object
            | Null
              deriving (Eq, Show, Typeable)
 {% endhighlight %}
-(<a href="http://hackage.haskell.org/package/aeson-0.6.1.0/docs/src/Data-Aeson-Types-Internal.html#Value"link</a>)
+(<a href="http://hackage.haskell.org/package/aeson-0.6.1.0/docs/src/Data-Aeson-Types-Internal.html#Value">link</a>)
 
 A JSON Value is an object, a string, a number, a bool or a Null value. What is the best we can do in Go?
 
