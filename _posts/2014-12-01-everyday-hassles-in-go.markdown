@@ -4,13 +4,11 @@ title:  "Everyday hassles in Go"
 date:   2014-12-01
 ---
 
-The article might interest people who are familiar with Go and who are curious how functional languages solve certain problem Go has.
+Go became a reliable, if a bit overly simple friend of mine during the past years. I use it in my day job and for side projects alike. Despite using (and liking*) it a lot, I have to admit the language could be improved a lot by borrowing battle tested ideas from more modern languages. Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not know about alternative approaches. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
 
-Go became a reliable, if a bit overly simple friend of mine during the past years. I use it in my day job and for side projects alike. Despite using (and liking*) it a lot, I have to admit the language could be improved a lot by borrowing battle tested ideas from more modern languages. Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not even know that there is a better way to things. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
+This lack of perspective in the Go community hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about it's potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go has an immense responsibility when it comes to improving our industry as a whole.
 
-This lack of perspective in the Go community further hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about it's potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go has an immense responsibility when it comes to improving our industry as a whole.
-
-To show the limitations of some of the archaic concepts present in Go - here are the analysis if some of the features (or the lack of them) I consider unfortunate, with use cases and accompanying code. Some of these will be highly subjective, and the examples may be quiet arbitrary. Most of the difficulties listed here could be fixed by a relatively small number of changes (<a href="http://en.wikipedia.org/wiki/Pareto_principle">the 80/20 rule?</a>).
+To show the limitations of some of the archaic concepts present in Go - here are the analysis if some of the features (or the lack of them) I consider unfortunate, with use cases and accompanying code. The examples may be quiet arbitrary. Most of the difficulties listed here could be fixed by a relatively small number of changes (<a href="http://en.wikipedia.org/wiki/Pareto_principle">the 80/20 rule?</a>).
 
 *Mostly due to the amazingly comprehensive standard library. For such a young language anyway. The documentation is also brilliant.
 
@@ -30,7 +28,7 @@ Well, how less smoothly? Let's investigate.
 
 A rather surprising set of functionality is missing from the standard library: a type of 'bread and butter' code which deals with <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-List.html">simple but often encountered scenarios</a> what no programmer should implement, because it is simply a waste of brainpower cycles - there is no gain to be won by reimplementing - let's say - deduping elements in a slice.
 
-##### Example: Deduping slice elements
+##### Deduping slice elements
 
 Deduping elements of a slice happens the following way in go:
 
@@ -294,11 +292,11 @@ func main() {
 15
 {% endhighlight %}
 
-These operations would be possible in Go with the help of generics... although the type signature of the lambda would have to be stated explicitly, since Go <a href="http://programmers.stackexchange.com/questions/253558/type-inference-in-golang-haskell">does not support type inference</a> (not the rather powerful <a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindley-Milner</a> one anyway).
+These operations would be possible in Go with the help of generics... although the type signature of lambdas would have to be stated explicitly, since Go <a href="http://programmers.stackexchange.com/questions/253558/type-inference-in-golang-haskell">does not support type inference</a> (not the rather powerful <a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindley-Milner</a> one anyway).
 
 #### The billion dollar mistake
 
-Nil pointers, as implicit valid values for all pointer types, and interfaces are one fo the most frequent sources of bugs. The problem lies in the fact that one can dereference a pointer without proving that it actually holds a non-nil value, eg.:
+Nil pointers, as implicit valid values for all pointer types, and interfaces are one of the most frequent sources of bugs. The problem lies in the fact that one can dereference a pointer without proving that it actually holds a non-nil value, eg.:
 
 {% highlight go %}
 file, _ = os.Open("file.txt")
@@ -314,7 +312,7 @@ Is perfectly valid as far as the compiler is concerned. Meanwhile, using Option 
 "Not found :("
 {% endhighlight %}
 
-The different cases must be handled explicitly.
+The different cases must be handled explicitly, forcing the programmer to think about both of them.
 
 #### Empty interfaces everywhere
 
@@ -346,7 +344,7 @@ type List
     func (l *List) Remove(e *Element) interface{}
 {% endhighlight %}
 
-All the functions that are dealing with the elements of the List are defined with empty interfaces. That could be completely avoided if the List type could be parametrized over other types (like the builtin types map and slice can be. If you want to read more about these types, which seem to require other types to produce a 'final type', start <a href="http://en.wikipedia.org/wiki/Kind_%28type_theory%29">here<a>).
+All the functions that are dealing with the elements of the List are defined with empty interfaces. That could be completely avoided if the List type could be parametrized over other types (like the builtin types map and slice can be). If you want to read more about those types, which seem to require other types to produce a 'final type', start <a href="http://en.wikipedia.org/wiki/Kind_%28type_theory%29">here<a>).
 
 ### Lack of algebraic data types
 
@@ -425,13 +423,13 @@ func main() {
 
 The compiler happily accepts this while this is clearly a bug. Tools like Go vet may catch the errors - however - that is just band aid. Guaranteeing code correctness is the job of the compiler, a tool like Go vet may utilize ad hoc solutions to detect certain specific problems with the code but that solution will never be as coherent and all encompassing as a sufficiently expressive type system can be.
 
-With the help of ADTs (and pattern matching) this problem can be easily detected (more on this later).
-
 ### Interfaces are misdesigned
 
 #### Interfaces are implemented implicitly
 
-Interfaces in Go are implemented implicitly, which means if someone happens to come along and creates an interface with a method which your type already has your type immediately implements that interface - wether you like it or not. While this happens rather rarely in practice (in my experience), the implicit nature of this feels out of place - usually Go prefers explicitness over implicitness, why the exception here? When writing a methods which is implementing an interface one has a specific interface in mind anyway - then why lose this information? In fact, readability suffers - one has no way to know which interfaces a type implements. It also prevents us to state how non local types implement an interface...
+Interfaces in Go are implemented implicitly, which means if someone happens to come along and creates an interface with a method which your type already has your type immediately implements that interface - wether you like it or not. While this happens rather rarely in practice (in my experience), the implicit nature of this feels out of place - usually Go prefers explicitness over implicitness, why the exception here? 
+
+When writing a methods which is implementing an interface one has a specific interface in mind anyway - then why lose this information? In fact, readability suffers - one has no way to know which interfaces a type implements. It also prevents us to state how non local types implement an interface...
 
 #### No way to define how a foreign type implements an interface
 
@@ -443,7 +441,7 @@ Interestingly, Go already has syntax which would be well suited to this (not lik
 
 #### Lack of deriving
 
-Default implementations for certain interfaces should be provided. How can Go print out our structs or maps correctly? We don't know. It is done with reflection, which is runtime concept and sidesteps the type system entirely. The ad hoc, edge case laden nature of Go shows here again. For those who are unfamiliar with the concept.
+Default implementations for certain interfaces should be provided. How can Go print out our structs or maps correctly? We don't know. It is done with reflection, which is runtime concept and sidesteps the type system entirely. The ad hoc, edge case laden nature of Go shows here again. For those who are unfamiliar with the concept:
 
 If we define a record (struct in Go land), and we want to print an instance of it, we get a compile error.
 
@@ -507,7 +505,7 @@ Map String Any
 {% endhighlight %}
 (hypothetical Haskell equivalent)
 
-?
+? Go got rid of some of these (for loop, if requires no parentheses), but there are still plenty.
 
 ##### Operators should be functions
 
