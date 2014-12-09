@@ -4,7 +4,7 @@ title:  "Everyday hassles in Go"
 date:   2014-12-01
 ---
 
-The following article is not finished yet. The article might interest people who are familiar with Go and who are curious how functional languages solve certain problem Go has.
+The article might interest people who are familiar with Go and who are curious how functional languages solve certain problem Go has.
 
 Go became a reliable, if a bit overly simple friend of mine during the past years. I use it in my day job and for side projects alike. Despite using (and liking*) it a lot, I have to admit the language could be improved a lot by borrowing battletested ideas from more modern languages. Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not even know that there is a better way to things. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
 
