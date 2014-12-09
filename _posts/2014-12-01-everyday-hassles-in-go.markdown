@@ -6,7 +6,7 @@ date:   2014-12-01
 
 The article might interest people who are familiar with Go and who are curious how functional languages solve certain problem Go has.
 
-Go became a reliable, if a bit overly simple friend of mine during the past years. I use it in my day job and for side projects alike. Despite using (and liking*) it a lot, I have to admit the language could be improved a lot by borrowing battletested ideas from more modern languages. Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not even know that there is a better way to things. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
+Go became a reliable, if a bit overly simple friend of mine during the past years. I use it in my day job and for side projects alike. Despite using (and liking*) it a lot, I have to admit the language could be improved a lot by borrowing battle tested ideas from more modern languages. Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not even know that there is a better way to things. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
 
 This lack of perspective in the Go community further hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about it's potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go has an immense responsibility when it comes to improving our industry as a whole.
 
@@ -28,7 +28,7 @@ Well, how less smoothly? Let's investigate.
 
 #### Bye-bye code reuse
 
-A rather suprising set of functionality is missing from the standard library: a type of 'bread and butter' code which deals with <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-List.html">simple but often encountered scenarios</a> what no programmer should implement, because it is simply a waste of brainpower cycles - there is no gain to be won by reimplementing - let's say - deduping elements in a slice.
+A rather surprising set of functionality is missing from the standard library: a type of 'bread and butter' code which deals with <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-List.html">simple but often encountered scenarios</a> what no programmer should implement, because it is simply a waste of brainpower cycles - there is no gain to be won by reimplementing - let's say - deduping elements in a slice.
 
 ##### Example: Deduping slice elements
 
@@ -87,7 +87,7 @@ func deduper(xs []interface{}) []interface{} {
 	index := map[int
 {% endhighlight %}
 
-Uh-oh again. We even had to stop typing. We can not use the empty interface as our key in the map... To be able to use something as a map key the members of that type must be comparable (<a href="http://golang.org/ref/spec#Comparison_operators">http://golang.org/ref/spec#Comparison_operators</a>). Empty interfaces are not comparable, since they can represent non-comparable types! This way we can forgot our neat implementating which reuses the idempotent nature of setting keys of a map!
+Uh-oh again. We even had to stop typing. We can not use the empty interface as our key in the map... To be able to use something as a map key the members of that type must be comparable (<a href="http://golang.org/ref/spec#Comparison_operators">http://golang.org/ref/spec#Comparison_operators</a>). Empty interfaces are not comparable, since they can represent non-comparable types! This way we can forget our neat implementation which reuses the idempotent nature of setting keys of a map!
 
 Let's look for an other approach - surely the Go authors have paved the way for us. Let's take a look at the <a href="http://golang.org/pkg/sort/">sort package</a>. We see a quite descriptively named <a href="http://golang.org/pkg/sort/#Interface">sort.Interface</a> type there:
 
@@ -164,7 +164,7 @@ The above snippets illustrates how nub works with a list of anything, as long as
 
 For those who are bothered about the exponential algorithmic complexity of nub, let's recreate our efficient (albeit nongeneric) Go solution in Haskell.
 
-Nub requires the elements of the list to be instances of the Eq typeclass, that is why it performs soo poorly. If we are stricter and require the elements to be instances of Ord typclass, as is the case with Go's maps indices, we can write a more efficient function, which pretty much does the same thing as the Go code snippet above - puts the list elements to a map and then converts back to a list:
+Nub requires the elements of the list to be instances of the Eq typeclass, that is why it performs so poorly. If we are stricter and require the elements to be instances of Ord typeclass, as is the case with Go's maps indices, we can write a more efficient function, which pretty much does the same thing as the Go code snippet above - puts the list elements to a map and then converts back to a list:
 
 {% highlight haskell %}
 import qualified Data.Map as M
@@ -186,9 +186,9 @@ Please note that our version of nub is not order preserving - neither is the Go 
 
 <a href="https://groups.google.com/forum/#!topic/golang-nuts/-pqkICuokio">This thread</a> discusses the same problem, without finding a nice solution - because there isn't any - the type system is just not expressive enough.
 
-#### Flow distruption
+#### Flow disruption
 
-Perhaps the most elusive, but rather destructive aspect of the lack of generics in Go is how the language forces the user to go into uninteresting details while expressing ideas, distrupting the programmer's flow. We don't have to venture far to see examples of this - we can stay at the topic of list operations, as we did in the previous example.
+Perhaps the most elusive, but rather destructive aspect of the lack of generics in Go is how the language forces the user to go into uninteresting details while expressing ideas, disrupting the programmer's flow. We don't have to venture far to see examples of this - we can stay at the topic of list operations, as we did in the previous example.
 
 ##### Standard list operations
 
@@ -294,11 +294,11 @@ func main() {
 15
 {% endhighlight %}
 
-These operations would be possible in Go with the help of generics... although the type signature of the lambda would have to be stated explicitly, since Go <a href="http://programmers.stackexchange.com/questions/253558/type-inference-in-golang-haskell">does not support type inference</a> (not the rather powerful <a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindler-Milner</a> one anyway).
+These operations would be possible in Go with the help of generics... although the type signature of the lambda would have to be stated explicitly, since Go <a href="http://programmers.stackexchange.com/questions/253558/type-inference-in-golang-haskell">does not support type inference</a> (not the rather powerful <a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindley-Milner</a> one anyway).
 
 #### The billion dollar mistake
 
-Nil pointers, as implicit valid values for all pointer types, and interfaces are one fo the most frequent sources of bugs. The problem lies in the fact that one can dereference a pointer without proving that it actually holds a non-nil value, eg:
+Nil pointers, as implicit valid values for all pointer types, and interfaces are one fo the most frequent sources of bugs. The problem lies in the fact that one can dereference a pointer without proving that it actually holds a non-nil value, eg.:
 
 {% highlight go %}
 file, _ = os.Open("file.txt")
@@ -322,7 +322,7 @@ Without generics support, it is impossible to create a generic type parametrized
 
 The type signature becomes littered with interface{}-s, decreasing the readabilty and the type safety of the language.
 
-Take a look at the following package: <a href="http://golang.org/pkg/container/list">The conatiner/list package in the standard library</a>
+Take a look at the following package: <a href="http://golang.org/pkg/container/list">The container/list package in the standard library</a>
 
 The type signature of the List type is the following:
 
@@ -423,7 +423,7 @@ func main() {
 {% endhighlight %}
 (<a href="http://play.golang.org/p/oVGfd-e2w1">playground link</a>)
 
-The compiler happily accepts this while this is clearly a bug. Tools like Go vet may catch the errors - however - that is just band aid. Guaranteeing code correctess is the job of the compiler, a tool like Go vet may utilize ad hoc solutions to detect certain specific problems with the code but that solution will never be as coherent and all encompassing as a sufficiently expressive type system can be.
+The compiler happily accepts this while this is clearly a bug. Tools like Go vet may catch the errors - however - that is just band aid. Guaranteeing code correctness is the job of the compiler, a tool like Go vet may utilize ad hoc solutions to detect certain specific problems with the code but that solution will never be as coherent and all encompassing as a sufficiently expressive type system can be.
 
 With the help of ADTs (and pattern matching) this problem can be easily detected (more on this later).
 
@@ -443,7 +443,7 @@ Interestingly, Go already has syntax which would be well suited to this (not lik
 
 #### Lack of deriving
 
-Default implementations for certain interfaces should be provided. How can Go print out our structs or maps currectly? We don't know. It is done with reflection, which is runtime concept and sidesteps the type system entirely. The ad hoc, edge case laden nature of Go shows here again. For those who are unfamiliar with the concept.
+Default implementations for certain interfaces should be provided. How can Go print out our structs or maps correctly? We don't know. It is done with reflection, which is runtime concept and sidesteps the type system entirely. The ad hoc, edge case laden nature of Go shows here again. For those who are unfamiliar with the concept.
 
 If we define a record (struct in Go land), and we want to print an instance of it, we get a compile error.
 
@@ -561,6 +561,6 @@ Unfortunately, in Go, M and map[string]interface{} become completely separate ty
 
 ### Conclusion
 
-Go focuses on simplicity, but the lack of strong foundations introduces edge cases in a lot of places, making the language more complex and less useful than it could be. But even with those edge cases, Go is still easier to learn than most other typed languages, and that is probably its the biggest selling point. It very much feels like a dynamic language with a very minimalistic type system. This has the positive effect of introducing people who were exposed only to dynamic langauges to the world of type system due to its approachability. However, this simplicity may very well adversely affect the Go programmers by accepting suboptimal solutions.
+Go focuses on simplicity, but the lack of strong foundations introduces edge cases in a lot of places, making the language more complex and less useful than it could be. But even with those edge cases, Go is still easier to learn than most other typed languages, and that is probably its the biggest selling point. It very much feels like a dynamic language with a very minimalistic type system. This has the positive effect of introducing people who were exposed only to dynamic languages to the world of type system due to its approachability. However, this simplicity may very well adversely affect the Go programmers by accepting suboptimal solutions.
 
 The support and hype it receives might be better spent on more novel languages with bigger potential to better our industry.
