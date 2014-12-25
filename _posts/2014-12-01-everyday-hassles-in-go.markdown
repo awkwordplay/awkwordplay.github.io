@@ -4,7 +4,7 @@ title:  "Everyday hassles in Go"
 date:   2014-12-01
 ---
 
-Go became a reliable, if a bit overly simple friend of mine during the past years. I use it in my day job and for side projects alike. I quiet like the Go ecosystem, the tooling is great, from go fmt to race detector one can feel that the authors have done their share coding in the wild. The standard library is very comprehensive (especially considering the age of the language), the documentation is top notch. The language itself though, could be improved a lot by borrowing battle tested ideas from more modern ones.
+Go became a reliable ally of mine during the past years. I use it in my day job and for side projects alike. I quiet like the Go ecosystem, the tooling is great, from go fmt to race detector one can feel that the authors have done their share coding in the wild. The standard library is very comprehensive (especially considering the age of the language), the documentation is top notch. The language itself though, could be improved a lot by borrowing battle tested ideas from more modern ones.
 
 Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not know about alternative approaches. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
 
