@@ -4,13 +4,13 @@ title:  "Everyday hassles in Go"
 date:   2014-12-01
 ---
 
-Go became a reliable ally of mine during the past years. I use it in my day job and for side projects alike. I quiet like the Go ecosystem, the tooling is great, from go fmt to race detector one can feel that the authors have done their share of coding in the wild. The standard library is very comprehensive (especially considering the age of the language), the documentation is top notch. The language itself though, could be improved a lot by borrowing battle tested ideas from more modern ones.
+Go became a reliable ally of mine during the past years. I use it in my day job and for side projects alike. I quite like the Go ecosystem, the tooling is great, from go fmt to race detector one can feel that the authors have done their share of coding in the wild. The standard library is very comprehensive (especially considering the age of the language), the documentation is top notch. The language itself though, could be improved a lot by borrowing battle tested ideas from more modern ones.
 
 Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not know about alternative approaches. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
 
 This lack of perspective in the Go community hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about it's potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go has an immense responsibility when it comes to improving our industry as a whole.
 
-To show the limitations of some of the archaic concepts present in Go - here are the analysis if some of the features (or the lack of them) I consider unfortunate, with use cases and accompanying code. The examples may be quiet arbitrary. Most of the difficulties listed here could be fixed by a relatively small number of changes (<a href="http://en.wikipedia.org/wiki/Pareto_principle">the 80/20 rule?</a>).
+To show the limitations of some of the archaic concepts present in Go - here are the analysis if some of the features (or the lack of them) I consider unfortunate, with use cases and accompanying code. The examples may be quite arbitrary. Most of the difficulties listed here could be fixed by a relatively small number of changes (<a href="http://en.wikipedia.org/wiki/Pareto_principle">the 80/20 rule?</a>).
 
 ### Lack of generics
 
@@ -22,7 +22,7 @@ Generics are well supported by a wide range of languages, and is one of the most
 
 Well, how less smoothly? Let's investigate.
 
-(Quiet a good chunk of this blog post will be dedicated to help people who never used generics to develop an intuition why generics are useful. If you are not interested in this part, scroll down a bit.)
+(Quite a good chunk of this blog post will be dedicated to help people who never used generics to develop an intuition why generics are useful. If you are not interested in this part, scroll down a bit.)
 
 #### Bye-bye code reuse
 
@@ -370,7 +370,7 @@ type Tree struct {
 }
 {% endhighlight %}
 
-All the possible values would be present at all times - even if they are not being used at all. This gets messy quiet quickly.
+All the possible values would be present at all times - even if they are not being used at all. This gets messy quite quickly.
 
 #### A rainbow of grey, grey, and grey
 
