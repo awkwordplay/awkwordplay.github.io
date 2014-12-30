@@ -160,7 +160,7 @@ nub :: Eq a => [a] -> [a]
 
 The above snippets illustrates how nub works with a list of anything, as long as anything is an instance of the Eq typeclass - ie. there is a defined way to compare them on grounds of equality.
 
-For those who are bothered about the exponential algorithmic complexity of nub, let's recreate our efficient (albeit nongeneric) Go solution in Haskell.
+For those who are bothered about the quadratic algorithmic complexity of nub, let's recreate our efficient (albeit nongeneric) Go solution in Haskell.
 
 Nub requires the elements of the list to be instances of the Eq typeclass, that is why it performs so poorly. If we are stricter and require the elements to be instances of Ord typeclass, as is the case with Go's maps indices, we can write a more efficient function, which pretty much does the same thing as the Go code snippet above - puts the list elements to a map and then converts back to a list:
 
