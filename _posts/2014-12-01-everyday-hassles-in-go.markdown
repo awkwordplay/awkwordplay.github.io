@@ -8,7 +8,7 @@ Go became a reliable ally of mine during the past years. I use it in my day job 
 
 Unfortunately, a lot of Go programmers are coming from untyped languages, which means they haven't yet acquired the taste for sufficiently expressive type systems, thus they may not know about alternative approaches. A snarky person might say, they suffer from the <a href="http://www.paulgraham.com/avg.html">blub paradox</a>.
 
-This lack of perspective in the Go community hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about it's potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go has an immense responsibility when it comes to improving our industry as a whole.
+This lack of perspective in the Go community hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about its potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go have an immense responsibility when it comes to improving our industry as a whole.
 
 To show the limitations of some of the archaic concepts present in Go - here are the analysis if some of the features (or the lack of them) I consider unfortunate, with use cases and accompanying code. The examples may be quite arbitrary. Most of the difficulties listed here could be fixed by a relatively small number of changes (<a href="http://en.wikipedia.org/wiki/Pareto_principle">the 80/20 rule?</a>).
 
@@ -26,7 +26,7 @@ Well, how less smoothly? Let's investigate.
 
 #### Bye-bye code reuse
 
-A rather surprising set of functionality is missing from the standard library: a type of 'bread and butter' code which deals with <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-List.html">simple but often encountered scenarios</a> what no programmer should implement, because it is simply a waste of brainpower cycles - there is no gain to be won by reimplementing - let's say - deduping elements in a slice.
+A rather surprising set of functionality is missing from the standard library: a type of 'bread and butter' code which deals with <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-List.html">simple but often encountered scenarios</a> that no programmer should implement, because it is simply a waste of brainpower cycles - there is no gain to be won by reimplementing - let's say - deduping elements in a slice.
 
 ##### Deduping slice elements
 
@@ -58,7 +58,7 @@ func main() {
 {% endhighlight %}
 (<a href="http://play.golang.org/p/Mo_ZfbJNJF">playground link</a>)
 
-For those who are not familiar with the concept of generics, here is a though experiment: let's refactor that bit of code by moving it out to a function:
+For those who are not familiar with the concept of generics, here is a thought experiment: let's refactor that bit of code by moving it out to a function:
 
 {% highlight go %}
 package main
