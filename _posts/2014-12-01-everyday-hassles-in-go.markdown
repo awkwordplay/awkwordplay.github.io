@@ -10,7 +10,7 @@ Unfortunately, a lot of Go programmers are coming from untyped languages, which 
 
 This lack of perspective in the Go community hinders the progress of the language - people do not exert enough force toward the authors (not like they seem to be crowd pleasers anyway) to better the language. While I am grateful for Go as a tool, I am slightly worried about its potential educational effect - or the lack of it. Given it is backed by Google - due to the hype and exposure that brings - even design failures will be accepted as 'the way to do it' by a large number of people. People like the authors of Go have an immense responsibility when it comes to improving our industry as a whole.
 
-To show the limitations of some of the archaic concepts present in Go - here are the analysis if some of the features (or the lack of them) I consider unfortunate, with use cases and accompanying code. The examples may be quite arbitrary. Most of the difficulties listed here could be fixed by a relatively small number of changes (<a href="http://en.wikipedia.org/wiki/Pareto_principle">the 80/20 rule?</a>).
+Here are the analysis of some of the features (or the lack of them) I consider unfortunate, with use cases and accompanying code. The examples may be quite arbitrary. Most of the difficulties listed here could be fixed by a relatively small number of changes (<a href="http://en.wikipedia.org/wiki/Pareto_principle">the 80/20 rule?</a>).
 
 ### Lack of generics
 
