@@ -562,3 +562,9 @@ Unfortunately, in Go, M and map[string]interface{} become completely separate ty
 Go focuses on simplicity, but the lack of strong foundations introduces edge cases in a lot of places, making the language more complex and less useful than it could be. But even with those edge cases, Go is still easier to learn than most other typed languages, and that is probably its the biggest selling point. It very much feels like a dynamic language with a very minimalistic type system. This has the positive effect of introducing people who were exposed only to dynamic languages to the world of type system due to its approachability. However, this simplicity may very well adversely affect the Go programmers by accepting suboptimal solutions.
 
 The support and hype it receives might be better spent on more novel languages with bigger potential to better our industry.
+
+### Appendix
+
+- <a href="https://news.ycombinator.com/item?id=8814202">HN thread</a>
+- <a href="http://www.reddit.com/r/programming/comments/2qtgwm/everyday_hassles_in_go_xpost_from_rgolang/">r/programming Reddit thread</a>
+- <a href="http://www.reddit.com/r/golang/comments/2qtaf2/everyday_hassles_in_go/">r/golang Reddit thread</a>
